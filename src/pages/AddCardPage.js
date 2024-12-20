@@ -97,124 +97,124 @@ function AddCardPage() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Add or Select Word</h1>
+      <div style={{textAlign: "center", marginTop: "50px"}}>
+          <h1>Add or Select Word</h1>
+          <p>Current User ID: {userId}</p>
 
-      {/* Go Home Button */}
-      <button
-        onClick={() => navigate("/")} // Navigate to home page
-        style={{
-          padding: "10px 20px",
-          fontSize: "16px",
-          backgroundColor: "#4CAF50",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          marginBottom: "20px",
-        }}
-      >
-        Go Home
-      </button>
-
-
-      {/* Dropdown for selecting an existing word */}
-      <div style={{ marginBottom: "20px" }}>
-        <input
-          type="text"
-          placeholder="Search for a word"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          style={{ padding: "10px", width: "300px" }}
-        />
-        <ul style={{maxHeight: "200px", overflowY: "auto", padding: "0", marginTop: "10px"}}>
-          {filteredWords.map((wordObj, index) => (
-              <li
-                  key={index}
-                  onClick={() => handleSelectWord(wordObj)} // Assuming you want the 'word' property
-                  style={{
-                    cursor: "pointer",
-                    padding: "8px",
-                    backgroundColor: "#f0f0f0",
-                    marginBottom: "5px",
-                    borderRadius: "4px",
-                  }}
-              >
-                {wordObj.word} {/* Render the 'word' property */}
-              </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Display selected word */}
-      {selectedWord && (
-          <div style={{marginBottom: "20px"}}>
-            <h2>Selected Word: {selectedWord.word}</h2>
-            <p>ID: {selectedWord.id}</p>
-          </div>
-      )}
-
-      {/* Submit button for selected word */}
-      {selectedWord && (
-          <div style={{marginTop: "20px"}}>
-            <button
-                onClick={handleSubmitSelectedWord}
-            style={{
-              padding: "10px 20px",
-              fontSize: "16px",
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-            }}
-          >
-            Submit Selected Word
-          </button>
-        </div>
-      )}
-
-      {/* Button to add a new word */}
-      <button
-          onClick={() => setShowForm(true)}
-          style={{
-            padding: "10px 20px",
-            fontSize: "16px",
-            marginTop: "10px",
-          }}
-      >
-        Add a New Word
-      </button>
-
-      {/* Form to add a new word */}
-      {showForm && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>Add New Word</h3>
-          <form onSubmit={handleSubmitNewWord}>
-            <input
-              type="text"
-              placeholder="Enter new word"
-              value={newWord}
-              onChange={(e) => setNewWord(e.target.value)}
+          {/* Go Home Button */}
+          <button
+              onClick={() => navigate("/")} // Navigate to home page
               style={{
-                padding: "10px",
-                width: "300px",
-                marginBottom: "10px",
-                fontSize: "16px",
+                  padding: "10px 20px",
+                  fontSize: "16px",
+                  backgroundColor: "#4CAF50",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  marginBottom: "20px",
               }}
-            />
-            <div>
-              <button type="submit" style={{ padding: "10px 20px" }}>
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+          >
+              Go Home
+          </button>
 
 
+          {/* Dropdown for selecting an existing word */}
+          <div style={{marginBottom: "20px"}}>
+              <input
+                  type="text"
+                  placeholder="Search for a word"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  style={{padding: "10px", width: "300px"}}
+              />
+              <ul style={{maxHeight: "200px", overflowY: "auto", padding: "0", marginTop: "10px"}}>
+                  {filteredWords.map((wordObj, index) => (
+                      <li
+                          key={index}
+                          onClick={() => handleSelectWord(wordObj)} // Assuming you want the 'word' property
+                          style={{
+                              cursor: "pointer",
+                              padding: "8px",
+                              backgroundColor: "#f0f0f0",
+                              marginBottom: "5px",
+                              borderRadius: "4px",
+                          }}
+                      >
+                          {wordObj.word} {/* Render the 'word' property */}
+                      </li>
+                  ))}
+              </ul>
+          </div>
 
-      {/* Error message */}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-    </div>
+          {/* Display selected word */}
+          {selectedWord && (
+              <div style={{marginBottom: "20px"}}>
+                  <h2>Selected Word: {selectedWord.word}</h2>
+                  <p>ID: {selectedWord.id}</p>
+              </div>
+          )}
+
+          {/* Submit button for selected word */}
+          {selectedWord && (
+              <div style={{marginTop: "20px"}}>
+                  <button
+                      onClick={handleSubmitSelectedWord}
+                      style={{
+                          padding: "10px 20px",
+                          fontSize: "16px",
+                          backgroundColor: "#4CAF50",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "4px",
+                      }}
+                  >
+                      Submit Selected Word
+                  </button>
+              </div>
+          )}
+
+          {/* Button to add a new word */}
+          <button
+              onClick={() => setShowForm(true)}
+              style={{
+                  padding: "10px 20px",
+                  fontSize: "16px",
+                  marginTop: "10px",
+              }}
+          >
+              Add a New Word
+          </button>
+
+          {/* Form to add a new word */}
+          {showForm && (
+              <div style={{marginTop: "20px"}}>
+                  <h3>Add New Word</h3>
+                  <form onSubmit={handleSubmitNewWord}>
+                      <input
+                          type="text"
+                          placeholder="Enter new word"
+                          value={newWord}
+                          onChange={(e) => setNewWord(e.target.value)}
+                          style={{
+                              padding: "10px",
+                              width: "300px",
+                              marginBottom: "10px",
+                              fontSize: "16px",
+                          }}
+                      />
+                      <div>
+                          <button type="submit" style={{padding: "10px 20px"}}>
+                              Submit
+                          </button>
+                      </div>
+                  </form>
+              </div>
+          )}
+
+
+          {/* Error message */}
+          {error && <p style={{color: "red"}}>{error}</p>}
+      </div>
   );
 }
 
