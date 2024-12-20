@@ -31,6 +31,22 @@ function LoginPage() {
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>Login</h1>
+      {/* Go Home Button */}
+      <button
+        onClick={() => navigate("/")} // Navigate to home page
+        style={{
+          padding: "10px 20px",
+          fontSize: "16px",
+          backgroundColor: "#4CAF50",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          marginBottom: "20px",
+        }}
+      >
+        Go Home
+      </button>
+
       <div style={{ marginBottom: "20px" }}>
         <input
           type="text"

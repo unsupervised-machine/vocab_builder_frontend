@@ -2,6 +2,8 @@ import React, {useContext, useEffect, useState} from "react";
 import Flashcard from "../components/Flashcard";
 import {fetchProgress, fetchUserById, fetchUserByEmail, fetchWords, updateProgress, fetchUserWords} from "../services/api";
 import {AuthContext} from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 
 const FlashcardsPage = () => {
   const { userId } = useContext(AuthContext);
@@ -11,6 +13,8 @@ const FlashcardsPage = () => {
   const [wordQueue, setWordQueue] = useState(null);
   const [userProgress, setUserProgress] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
+
 
 
   // Fetch user data inside useEffect
@@ -148,8 +152,22 @@ const FlashcardsPage = () => {
 
 
   return (
-      <div>
-        <h1>Flashcards Page</h1>
+      <div style={{textAlign: "center", marginTop: "50px"}}><h1>Flashcards Page</h1>
+        {/* Go Home Button */}
+        <button
+            onClick={() => navigate("/")} // Navigate to home page
+            style={{
+              padding: "10px 20px",
+              fontSize: "16px",
+              backgroundColor: "#4CAF50",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              marginBottom: "20px",
+            }}
+        >
+          Go Home
+        </button>
         <p>Current User ID: {userId}</p>
         {wordQueue && wordQueue.length > 0 ? (
             <Flashcard

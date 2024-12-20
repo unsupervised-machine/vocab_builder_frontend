@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useContext} from "react";
 import {fetchWords, updateProgress} from "../services/api";
 import {AuthContext} from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 
 
 function AddCardPage() {
@@ -11,6 +13,9 @@ function AddCardPage() {
   const [newWord, setNewWord] = useState(""); // State for adding a new word
   const [showForm, setShowForm] = useState(false); // Toggle form visibility
   const [error, setError] = useState(""); // For any error message
+
+  const navigate = useNavigate(); // Initialize useNavigate
+
 
   // Fetch the list of words from the database on component mount
   // Fetch the list of words using the imported fetchWords function
@@ -94,6 +99,23 @@ function AddCardPage() {
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>Add or Select Word</h1>
+
+      {/* Go Home Button */}
+      <button
+        onClick={() => navigate("/")} // Navigate to home page
+        style={{
+          padding: "10px 20px",
+          fontSize: "16px",
+          backgroundColor: "#4CAF50",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          marginBottom: "20px",
+        }}
+      >
+        Go Home
+      </button>
+
 
       {/* Dropdown for selecting an existing word */}
       <div style={{ marginBottom: "20px" }}>
