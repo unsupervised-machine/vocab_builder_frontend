@@ -13,10 +13,9 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      // Replace with your API call to authenticate and get user data
-      // const response = await axios.post("/api/login", { email, password });
-      // const userData = response.data;
+
       const userData = await loginUser(email, password)
+
 
       if (userData && userData.id) {
         setUserId(userData.id); // Update userId in the context
@@ -35,7 +34,7 @@ function LoginPage() {
       <div style={{ marginBottom: "20px" }}>
         <input
           type="text"
-          placeholder="Username"
+          placeholder="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={{ padding: "10px", width: "300px", marginBottom: "10px" }}

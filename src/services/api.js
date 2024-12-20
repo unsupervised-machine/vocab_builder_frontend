@@ -1,5 +1,3 @@
-//  REWRITE THESE FILES, MOST IS CURRENTLY AI GENERATED CODE.
-
 
 import axios from "axios";
 
@@ -56,6 +54,6 @@ export const loginUser = async (email, password) => {
       // { headers: { "Content-Type": "application/json" } }
 
   );
-  // console.log("response", {response})
+  console.log("response", {response})
   return response.data;
 }

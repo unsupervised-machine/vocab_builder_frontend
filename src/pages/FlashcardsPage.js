@@ -1,25 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Flashcard from "../components/Flashcard";
 import {fetchProgress, fetchUserById, fetchUserByEmail, fetchWords, updateProgress} from "../services/api";
+import {AuthContext} from "../contexts/AuthContext";
 
-const FlashcardsPage = ({ userId }) => {
+const FlashcardsPage = () => {
+  const { userId } = useContext(AuthContext);
   const [words, setWords] = useState([]);
-  const testEmail = "taran3@gmail.com";
+  // const testEmail = "taran3@gmail.com";
   const [currentUser, setCurrentUser] = useState(null); // State to hold current user data
-  const [userProgress, setUserProgress] = useState([]);
+  // const [userProgress, setUserProgress] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Fetch user data inside useEffect
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       const user = await fetchUserByEmail(testEmail);
-  //       setCurrentUser(user); // Set the current user state
-  //       console.log("current user", user);
-  //     } catch (error) {
-  //       console.error("Error fetching user:", error);
-  //     }
-  //   };
 
   // Fetch user data inside useEffect
   useEffect(() => {
@@ -27,7 +18,6 @@ const FlashcardsPage = ({ userId }) => {
       try {
         const user = await fetchUserById(userId);
         setCurrentUser(user); // Set the current user state
-        console.log("current user", user);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -112,7 +102,7 @@ const FlashcardsPage = ({ userId }) => {
 
       // Calculate new review spacing based on the result
       let newReviewSpacing = currentData.review_spacing;
-      newReviewSpacing = result ? Math.round(newReviewSpacing * 1.5) : Math.round(newReviewSpacing * 0.5); // Adjust review_spacing based on result
+      newReviewSpacing = result ? Math.round(newReviewSpacing * 1.5 + 1) : Math.round(newReviewSpacing * 0.5); // Adjust review_spacing based on result
 
 
       // Get the current date and time for review_last_date
