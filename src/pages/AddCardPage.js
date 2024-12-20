@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
-import {fetchWords} from "../services/api";
+import React, {useState, useEffect, useContext} from "react";
+import {fetchWords, updateProgress} from "../services/api";
+import {AuthContext} from "../contexts/AuthContext";
 
 
 function AddCardPage() {
+  const { userId } = useContext(AuthContext);
   const [words, setWords] = useState([]); // List of words fetched from the database
   const [searchQuery, setSearchQuery] = useState(""); // User input for filtering words
   const [selectedWord, setSelectedWord] = useState(null); // Selected word from dropdown
@@ -30,16 +32,19 @@ function AddCardPage() {
     setSearchQuery(e.target.value);
   };
 
+  // console.log("words", words)
   // Filter words based on the search query
-  const filteredWords = words.filter((word) =>
-    word.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredWords = words.filter((wordObj) =>
+    wordObj.word.includes(searchQuery) // No `toLowerCase` applied here
   );
 
   // Handle selecting a word from the dropdown
-  const handleSelectWord = (word) => {
-    setSelectedWord(word);
-    setSearchQuery(word); // Auto-fill search query with selected word
+  // Handle selecting a word from the dropdown
+  const handleSelectWord = (wordObj) => {
+    setSelectedWord(wordObj); // Save the full word object
+    setSearchQuery(wordObj.word); // Auto-fill search query with selected word
   };
+
 
   // Handle submitting the new word form
   const handleSubmitNewWord = async (e) => {
@@ -56,6 +61,35 @@ function AddCardPage() {
       setError("Failed to add new word");
     }
   };
+  // Handle submitting the selected word (add to user's progress table)
+  const handleSubmitSelectedWord = async () => {
+    if (!selectedWord) {
+      setError("No word selected");
+      return;
+    }
+
+    try {
+      // Example: Add the selected word (using its id) to the user's progress
+      // await axios.post("/api/progress", { wordId: selectedWord.id });
+      const progress_data = {
+        user_id: userId,
+        word_id: selectedWord.id,
+        status: "not started",
+        review_count: 0,
+        review_spacing: 7
+      }
+
+      console.log("userId", userId)
+      console.log("selectedWord.id", selectedWord.id)
+      console.log("progress_data", progress_data)
+
+      await updateProgress(userId, selectedWord.id, progress_data)
+      setError(""); // Clear any error
+      alert(`Added "${selectedWord.word}" to your progress!`); // Placeholder alert
+    } catch (err) {
+      setError("Failed to add word to progress");
+    }
+  };
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
@@ -70,40 +104,60 @@ function AddCardPage() {
           onChange={handleSearchChange}
           style={{ padding: "10px", width: "300px" }}
         />
-        <ul style={{ maxHeight: "200px", overflowY: "auto", padding: "0", marginTop: "10px" }}>
-          {filteredWords.map((word, index) => (
-            <li
-              key={index}
-              onClick={() => handleSelectWord(word)}
-              style={{
-                cursor: "pointer",
-                padding: "8px",
-                backgroundColor: "#f0f0f0",
-                marginBottom: "5px",
-                borderRadius: "4px",
-              }}
-            >
-              {word}
-            </li>
+        <ul style={{maxHeight: "200px", overflowY: "auto", padding: "0", marginTop: "10px"}}>
+          {filteredWords.map((wordObj, index) => (
+              <li
+                  key={index}
+                  onClick={() => handleSelectWord(wordObj)} // Assuming you want the 'word' property
+                  style={{
+                    cursor: "pointer",
+                    padding: "8px",
+                    backgroundColor: "#f0f0f0",
+                    marginBottom: "5px",
+                    borderRadius: "4px",
+                  }}
+              >
+                {wordObj.word} {/* Render the 'word' property */}
+              </li>
           ))}
         </ul>
       </div>
 
       {/* Display selected word */}
       {selectedWord && (
-        <div style={{ marginBottom: "20px" }}>
-          <h2>Selected Word: {selectedWord}</h2>
+          <div style={{marginBottom: "20px"}}>
+            <h2>Selected Word: {selectedWord.word}</h2>
+            <p>ID: {selectedWord.id}</p>
+          </div>
+      )}
+
+      {/* Submit button for selected word */}
+      {selectedWord && (
+          <div style={{marginTop: "20px"}}>
+            <button
+                onClick={handleSubmitSelectedWord}
+            style={{
+              padding: "10px 20px",
+              fontSize: "16px",
+              backgroundColor: "#4CAF50",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+            }}
+          >
+            Submit Selected Word
+          </button>
         </div>
       )}
 
       {/* Button to add a new word */}
       <button
-        onClick={() => setShowForm(true)}
-        style={{
-          padding: "10px 20px",
-          fontSize: "16px",
-          marginTop: "10px",
-        }}
+          onClick={() => setShowForm(true)}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            marginTop: "10px",
+          }}
       >
         Add a New Word
       </button>
@@ -133,6 +187,8 @@ function AddCardPage() {
           </form>
         </div>
       )}
+
+
 
       {/* Error message */}
       {error && <p style={{ color: "red" }}>{error}</p>}
