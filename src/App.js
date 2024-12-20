@@ -4,8 +4,8 @@ import FlashcardsPage from "./pages/FlashcardsPage";
 import HomePage from "./pages/HomePage";
 import AddCardPage from "./pages/AddCardPage";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import { AuthProvider } from "./contexts/AuthContext";
-// import AddWordPage from "./pages/AddWordPage";
 
 function App() {
   return (
@@ -16,6 +16,8 @@ function App() {
             <Route path="/flashcards" element={<FlashcardsPage />} />
             <Route path="/add-card" element={<AddCardPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+
             {/*<Route path="/add-word" element={<AddWordPage />} />*/}
           </Routes>
         </Router>

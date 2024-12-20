@@ -2,6 +2,10 @@ import React from "react";
 import "./Flashcard.css"; // Add CSS styles
 
 const Flashcard = ({ word, onKnow, onDontKnow }) => {
+  if (!word) {
+    return <p>No word available to display.</p>; // Fallback message when word is null
+  }
+
   return (
     <div className="flashcard">
       <h2>{word.word}</h2>

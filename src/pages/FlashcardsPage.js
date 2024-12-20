@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import Flashcard from "../components/Flashcard";
-import {fetchProgress, fetchUserById, fetchUserByEmail, fetchWords, updateProgress} from "../services/api";
+import {fetchProgress, fetchUserById, fetchUserByEmail, fetchWords, updateProgress, fetchUserWords} from "../services/api";
 import {AuthContext} from "../contexts/AuthContext";
 
 const FlashcardsPage = () => {
@@ -8,7 +8,8 @@ const FlashcardsPage = () => {
   const [words, setWords] = useState([]);
   // const testEmail = "taran3@gmail.com";
   const [currentUser, setCurrentUser] = useState(null); // State to hold current user data
-  // const [userProgress, setUserProgress] = useState([]);
+  const [wordQueue, setWordQueue] = useState(null);
+  const [userProgress, setUserProgress] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
 
@@ -28,30 +29,43 @@ const FlashcardsPage = () => {
   }, []); // Empty dependency array to run this only once
 
   useEffect(() => {
-    const getWords = async () => {
-      const words = await fetchWords();
-      setWords(words);
-    };
+  const fetchWordsAndQueue = async () => {
+    // Fetch all words
+    const allWords = await fetchWords();
+    setWords(allWords);
+    console.log("all words", allWords)
 
-    // const getUserProgress = async () => {
-    //   const progress = await fetchUserProgress(userId);
-    //   setUserProgress(progress);
-    // };
+    // Fetch user's words to practice
+    const usr_words = await fetchUserWords(userId);
+    console.log("usr words", usr_words)
 
-    getWords();
-    // getUserProgress();
-  }, [userId]);
+    // Filter out words with status 'waiting' or 'learned'
+    const activeWords = usr_words.filter(
+      (word) => word.status !== "waiting" && word.status !== "learned"
+    );
+    console.log("active words", activeWords)
 
-  // Filter words
-  const filteredWords = words.filter((word) => {
-    // for now include all the words
-    return true;
-  });
+    // Extract the IDs of the filtered words
+    const wordIds = activeWords.map((word) => word.word_id);
+    console.log("wordIds", wordIds)
+
+    // Filter words that match the IDs in wordIds
+    const queue = allWords.filter((word) => wordIds.includes(word.id));
+
+    console.log("queue", queue)
+
+    // Set the word queue
+    setWordQueue(queue);
+  };
+
+  fetchWordsAndQueue();
+}, [userId]); // Dependency array ensures this runs when userId changes
+
 
   // Function to advance to the next word
   const goToNextWord = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex < filteredWords.length - 1 ? prevIndex + 1 : prevIndex
+       prevIndex + 1
     );
   };
 
@@ -87,15 +101,6 @@ const FlashcardsPage = () => {
       let newUserId = currentData.user_id;
       let newWordId = currentData.word_id;
 
-      // Calculate the new status based on the existing data and result
-      let newStatus = "active"; // Default status
-      if (currentData.status === "active") {
-        if (result === true) {
-          // If result is true and review_spacing > 30, set to 'learned', otherwise 'waiting'
-          newStatus = currentData.review_spacing > 30 ? "learned" : "waiting";
-        }
-      }
-
 
       // Calculate the new review count
       const newReviewCount = currentData.review_count + 1;
@@ -103,6 +108,15 @@ const FlashcardsPage = () => {
       // Calculate new review spacing based on the result
       let newReviewSpacing = currentData.review_spacing;
       newReviewSpacing = result ? Math.round(newReviewSpacing * 1.5 + 1) : Math.round(newReviewSpacing * 0.5); // Adjust review_spacing based on result
+
+
+      // Determine the new status based on the updated review_spacing
+      let newStatus = "active"; // Default status
+      if (newReviewSpacing > 30) {
+        newStatus = "learned"; // If review_spacing > 30, set status to "learned"
+      } else if (newReviewSpacing <= 30 && newReviewSpacing > 0) {
+        newStatus = "waiting"; // If review_spacing is <= 30, set status to "waiting"
+      }
 
 
       // Get the current date and time for review_last_date
@@ -137,9 +151,9 @@ const FlashcardsPage = () => {
       <div>
         <h1>Flashcards Page</h1>
         <p>Current User ID: {userId}</p>
-        {filteredWords.length > 0 ? (
+        {wordQueue && wordQueue.length > 0 ? (
             <Flashcard
-                word={filteredWords[currentIndex]}
+                word={wordQueue[currentIndex]}
                 onKnow={handleKnow}
                 onDontKnow={handleDontKnow}
             />

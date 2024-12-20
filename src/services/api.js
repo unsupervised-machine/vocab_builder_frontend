@@ -18,6 +18,11 @@ export const fetchWords = async () => {
   return response.data;
 };
 
+export const fetchUserWords = async (userId) => {
+  const response = await axios.get(`${API_BASE_URL}/users/${userId}/user_word_progress/`)
+  return response.data
+}
+
 export const fetchProgress = async (userId, wordId) => {
   try {
     console.log("user id", userId)
@@ -41,9 +46,6 @@ export const updateProgress = async (userId, wordId, progressData) => {
 };
 
 export const loginUser = async (email, password) => {
-  // Log the data being sent to the backend
-  console.log("Sending data to backend:", { email, password });
-
   // for now just returns the id of the user
   const response = await axios.post(
       `${API_BASE_URL}/login/`,
@@ -56,4 +58,17 @@ export const loginUser = async (email, password) => {
   );
   console.log("response", {response})
   return response.data;
+}
+
+export const registerUser = async (name, email, password) => {
+  const response = await axios.post(
+      `${API_BASE_URL}/register/`,
+      {
+        name,
+        email,
+        password
+      }
+  );
+  return response.data;
+
 }

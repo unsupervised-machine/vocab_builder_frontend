@@ -18,8 +18,13 @@ function HomePage() {
           </button>
         </Link>
         <Link to="/login">
-          <button style={{ padding: "10px 20px", fontSize: "16px" }}>
+          <button style={{ padding: "10px 20px", fontSize: "16px", marginRight: "10px" }}>
             Login
+          </button>
+        </Link>
+        <Link to="/register">
+          <button style={{ padding: "10px 20px", fontSize: "16px" }}>
+            Register
           </button>
         </Link>
       </div>
