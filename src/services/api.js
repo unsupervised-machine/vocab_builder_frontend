@@ -5,8 +5,13 @@ import axios from "axios";
 
 const API_BASE_URL = "http://127.0.0.1:8000"; // Replace with your FastAPI server URL
 
-export const fetchUser = async (email) => {
+export const fetchUserByEmail = async (email) => {
   const response = await axios.get(`${API_BASE_URL}/users/by-email/${email}`);
+  return response.data;
+}
+
+export const fetchUserById = async (id) => {
+  const response = await axios.get(`${API_BASE_URL}/users/by-id/${id}`);
   return response.data;
 }
 
@@ -36,3 +41,21 @@ export const updateProgress = async (userId, wordId, progressData) => {
   );
   return response.data;
 };
+
+export const loginUser = async (email, password) => {
+  // Log the data being sent to the backend
+  console.log("Sending data to backend:", { email, password });
+
+  // for now just returns the id of the user
+  const response = await axios.post(
+      `${API_BASE_URL}/login/`,
+      {
+        email,
+        password
+      },
+      // { headers: { "Content-Type": "application/json" } }
+
+  );
+  // console.log("response", {response})
+  return response.data;
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Flashcard from "../components/Flashcard";
-import {fetchProgress, fetchUser, fetchWords, updateProgress} from "../services/api";
+import {fetchProgress, fetchUserById, fetchUserByEmail, fetchWords, updateProgress} from "../services/api";
 
 const FlashcardsPage = ({ userId }) => {
   const [words, setWords] = useState([]);
@@ -10,16 +10,29 @@ const FlashcardsPage = ({ userId }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Fetch user data inside useEffect
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       const user = await fetchUserByEmail(testEmail);
+  //       setCurrentUser(user); // Set the current user state
+  //       console.log("current user", user);
+  //     } catch (error) {
+  //       console.error("Error fetching user:", error);
+  //     }
+  //   };
+
+  // Fetch user data inside useEffect
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const user = await fetchUser(testEmail);
+        const user = await fetchUserById(userId);
         setCurrentUser(user); // Set the current user state
         console.log("current user", user);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     };
+
 
     getUserData(); // Fetch user data when the component mounts
   }, []); // Empty dependency array to run this only once
@@ -131,17 +144,19 @@ const FlashcardsPage = ({ userId }) => {
 
 
   return (
-    <div>
-      {filteredWords.length > 0 ? (
-        <Flashcard
-          word={filteredWords[currentIndex]}
-          onKnow={handleKnow}
-          onDontKnow={handleDontKnow}
-        />
-      ) : (
-        <p>All words are marked as learned or waiting!</p>
-      )}
-    </div>
+      <div>
+        <h1>Flashcards Page</h1>
+        <p>Current User ID: {userId}</p>
+        {filteredWords.length > 0 ? (
+            <Flashcard
+                word={filteredWords[currentIndex]}
+                onKnow={handleKnow}
+                onDontKnow={handleDontKnow}
+            />
+        ) : (
+            <p>All words are marked as learned or waiting!</p>
+        )}
+      </div>
   );
 };
 
