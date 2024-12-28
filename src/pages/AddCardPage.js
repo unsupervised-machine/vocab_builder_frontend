@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from "react";
-import {fetchWords, updateProgress} from "../services/api";
+import {fetchWords, updateProgress, addWord} from "../services/api";
 import {AuthContext} from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
@@ -11,6 +11,7 @@ function AddCardPage() {
   const [searchQuery, setSearchQuery] = useState(""); // User input for filtering words
   const [selectedWord, setSelectedWord] = useState(null); // Selected word from dropdown
   const [newWord, setNewWord] = useState(""); // State for adding a new word
+  const [newDefinition, setNewDefinition] = useState("");
   const [showForm, setShowForm] = useState(false); // Toggle form visibility
   const [error, setError] = useState(""); // For any error message
 
@@ -55,9 +56,30 @@ function AddCardPage() {
   const handleSubmitNewWord = async (e) => {
     e.preventDefault();
     try {
-      // await axios.post("/api/words", { word: newWord });
+      // setNewWord has already been set
+      // make sure setNewDefinition has also been set
+      console.log("new word", newWord)
+      console.log("new def", newDefinition)
+      const word_data =   {
+          word: newWord,
+          definition: newDefinition
+      }
+
+      const new_word_id = await addWord(word_data);
+
+      const progress_data = {
+        user_id: userId,
+        word_id: new_word_id,
+        status: "not started",
+        review_count: 0,
+        review_spacing: 7
+      }
+
+      await updateProgress(userId, new_word_id, progress_data)
+
+      // after submission clean up
       setNewWord(""); // Reset new word input
-      setShowForm(false); // Close form
+      // setShowForm(false); // Close form
       setError(""); // Clear any error
       // Optionally, reload words
       // const response = await axios.get("/api/words");
@@ -195,6 +217,18 @@ function AddCardPage() {
                           placeholder="Enter new word"
                           value={newWord}
                           onChange={(e) => setNewWord(e.target.value)}
+                          style={{
+                              padding: "10px",
+                              width: "300px",
+                              marginBottom: "10px",
+                              fontSize: "16px",
+                          }}
+                      />
+                      <input
+                          type="text"
+                          placeholder="Enter new definition"
+                          value={newDefinition}
+                          onChange={(e) => setNewDefinition(e.target.value)}
                           style={{
                               padding: "10px",
                               width: "300px",

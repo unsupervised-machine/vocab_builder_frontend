@@ -13,6 +13,20 @@ export const fetchUserById = async (id) => {
   return response.data;
 }
 
+export const addWord = async (wordData) => {
+    const response = await axios.post(`${API_BASE_URL}/words/`,
+        wordData);
+    // return the id of the newly added word
+    return response.data.id
+}
+
+
+// instead just add use add progress with appropriate data filled
+// export const addUserWord = async (userId, wordId) => {
+//     const reposnse = await axios.post(`${API_BASE_URL}/users/${userId}/user_word_progress/${wordId}`)
+//     return reposnse.data
+// }
+
 export const fetchWords = async () => {
   const response = await axios.get(`${API_BASE_URL}/words/`);
   return response.data;
