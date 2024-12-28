@@ -110,6 +110,10 @@ function AddCardPage() {
       console.log("selectedWord.id", selectedWord.id)
       console.log("progress_data", progress_data)
 
+      // need to check if the word is already in the user's list
+      // first fetch user word progress, if response is null continue. otherwise return "word already added"
+
+
       await updateProgress(userId, selectedWord.id, progress_data)
       setError(""); // Clear any error
       alert(`Added "${selectedWord.word}" to your progress!`); // Placeholder alert
